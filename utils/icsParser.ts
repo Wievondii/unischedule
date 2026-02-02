@@ -24,6 +24,9 @@ const COLORS = [
   'bg-indigo-100 text-indigo-800 border-l-4 border-indigo-400',
 ];
 
+// Duration of each section in minutes
+const SECTION_DURATION_MINUTES = 45;
+
 /**
  * Parse an .ics file content into Course objects
  */
@@ -105,7 +108,7 @@ function convertEventToCourse(event: ICSEvent, index: number): Course | null {
     
     // Calculate duration in sections
     const durationMinutes = (endTime.getTime() - startTime.getTime()) / (1000 * 60);
-    const duration = Math.ceil(durationMinutes / 45); // Approximate sections (45 min each)
+    const duration = Math.ceil(durationMinutes / SECTION_DURATION_MINUTES);
     
     // Extract weeks from description
     const weeks = extractWeeks(event.description);
@@ -117,7 +120,7 @@ function convertEventToCourse(event: ICSEvent, index: number): Course | null {
     const color = COLORS[index % COLORS.length];
     
     return {
-      id: event.uid || `course-${index}`,
+      id: event.uid || `ics-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
       name: event.summary,
       room: event.location || '未指定',
       teacher: teacher,

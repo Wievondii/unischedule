@@ -52,7 +52,7 @@ function parseCourseLine(line: string, index: number): Course | null {
       const duration = endSection - startSection + 1;
       
       return {
-        id: `course-${Date.now()}-${index}`,
+        id: `text-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
         name: name.trim(),
         teacher: teacher.trim(),
         room: room.trim(),
@@ -75,7 +75,7 @@ function parseCourseLine(line: string, index: number): Course | null {
       const duration = endSection - startSection + 1;
       
       return {
-        id: `course-${Date.now()}-${index}`,
+        id: `text-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
         name: name.trim(),
         teacher: teacher.trim(),
         room: room.trim(),

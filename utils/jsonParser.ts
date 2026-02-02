@@ -35,7 +35,7 @@ function validateCourses(courses: any[]): Course[] {
     }
     
     return {
-      id: course.id || `course-${Date.now()}-${index}`,
+      id: course.id || `json-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
       name: course.name,
       room: course.room,
       teacher: course.teacher,
