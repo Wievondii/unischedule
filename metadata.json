@@ -1,0 +1,5 @@
+{
+  "name": "UniSchedule",
+  "description": "A comprehensive university course scheduling application featuring daily and weekly views, customizable settings, and import capabilities.",
+  "requestFramePermissions": []
+}
