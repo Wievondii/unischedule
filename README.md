@@ -119,10 +119,6 @@ unischedule/
 - **图标**：Lucide React
 - **移动端**：Capacitor
 
-## AI Studio
-
-View your app in AI Studio: https://ai.studio/apps/drive/1wattRPPEPBtilIdGgmlf7A_3rnTbs2U6
-
 ## 许可证
 
 MIT License
