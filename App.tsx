@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Tab, ViewMode, SettingsState, Course } from './types';
 import { MOCK_COURSES } from './constants';
 import ScheduleGrid from './components/ScheduleGrid';
@@ -6,6 +6,7 @@ import DailyView from './components/DailyView';
 import SettingsPage from './components/SettingsPage';
 import ImportPage from './components/ImportPage';
 import { Grid3X3, Calendar as CalendarIcon, Settings, Download, List } from 'lucide-react';
+import { Preferences } from '@capacitor/preferences';
 
 function App() {
   const [activeTab, setActiveTab] = useState<Tab>(Tab.SCHEDULE);
@@ -21,6 +22,57 @@ function App() {
   });
 
   const [courses, setCourses] = useState<Course[]>(MOCK_COURSES);
+  const [loaded, setLoaded] = useState(false);
+
+  // Load courses from storage on mount
+  useEffect(() => {
+    const loadCourses = async () => {
+      try {
+        const { value } = await Preferences.get({ key: 'unischedule_courses' });
+        if (value) {
+          setCourses(JSON.parse(value));
+        }
+      } catch (error) {
+        console.error('Failed to load courses:', error);
+        // Fallback to localStorage for web
+        const saved = localStorage.getItem('unischedule_courses');
+        if (saved) {
+          setCourses(JSON.parse(saved));
+        }
+      } finally {
+        setLoaded(true);
+      }
+    };
+    loadCourses();
+  }, []);
+
+  // Save courses to storage whenever they change
+  useEffect(() => {
+    if (!loaded) return; // Don't save on initial load
+    
+    const saveCourses = async () => {
+      const coursesJson = JSON.stringify(courses);
+      try {
+        await Preferences.set({
+          key: 'unischedule_courses',
+          value: coursesJson,
+        });
+        // Also save to localStorage for web compatibility
+        localStorage.setItem('unischedule_courses', coursesJson);
+      } catch (error) {
+        console.error('Failed to save courses:', error);
+        // Fallback to localStorage
+        localStorage.setItem('unischedule_courses', coursesJson);
+      }
+    };
+    
+    saveCourses();
+  }, [courses, loaded]);
+
+  const handleImportCourses = (importedCourses: Course[]) => {
+    setCourses(importedCourses);
+    setActiveTab(Tab.SCHEDULE); // Navigate back to schedule view
+  };
 
   const renderContent = () => {
     switch (activeTab) {
@@ -37,7 +89,7 @@ function App() {
               currentDate={new Date()}
             />;
       case Tab.IMPORT:
-        return <ImportPage />;
+        return <ImportPage onImport={handleImportCourses} />;
       case Tab.SETTINGS:
         return <SettingsPage settings={settings} setSettings={setSettings} />;
       default:
