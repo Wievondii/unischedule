@@ -20,7 +20,21 @@ function App() {
     totalWeeks: 24
   });
 
-  const [courses, setCourses] = useState<Course[]>(MOCK_COURSES);
+  const [courses, setCourses] = useState<Course[]>(() => {
+    // Try to load courses from localStorage
+    const saved = localStorage.getItem('unischedule_courses');
+    return saved ? JSON.parse(saved) : MOCK_COURSES;
+  });
+
+  // Save courses to localStorage whenever they change
+  React.useEffect(() => {
+    localStorage.setItem('unischedule_courses', JSON.stringify(courses));
+  }, [courses]);
+
+  const handleImportCourses = (importedCourses: Course[]) => {
+    setCourses(importedCourses);
+    setActiveTab(Tab.SCHEDULE); // Navigate back to schedule view
+  };
 
   const renderContent = () => {
     switch (activeTab) {
@@ -37,7 +51,7 @@ function App() {
               currentDate={new Date()}
             />;
       case Tab.IMPORT:
-        return <ImportPage />;
+        return <ImportPage onImport={handleImportCourses} />;
       case Tab.SETTINGS:
         return <SettingsPage settings={settings} setSettings={setSettings} />;
       default:
