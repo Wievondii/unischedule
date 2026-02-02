@@ -1,12 +1,20 @@
 # Building UniSchedule as an APK
 
-This document describes how to build UniSchedule as an Android APK.
+This document describes how to build UniSchedule as an Android APK with home screen widget support.
 
 ## Prerequisites
 
 1. Node.js and npm installed
 2. Android Studio installed with SDK
 3. Java JDK 17 or higher
+
+## Features in APK
+
+- ✅ Fully offline operation (no API keys needed)
+- ✅ Import .ics, .json, and text files
+- ✅ Home screen widget for viewing today's schedule
+- ✅ Native Android performance
+- ✅ Data persistence with Capacitor Storage
 
 ## Building APK
 
@@ -67,6 +75,17 @@ To test on an emulator or connected device:
 ```bash
 npx cap run android
 ```
+
+### Testing the Widget
+
+After installing the APK:
+1. Long-press on the home screen
+2. Select "Widgets"
+3. Find "UniSchedule"
+4. Drag the widget to your home screen
+5. The widget will display today's courses
+
+See [WIDGET_GUIDE.md](WIDGET_GUIDE.md) for detailed widget usage instructions.
 
 ## Troubleshooting
 
