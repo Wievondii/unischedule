@@ -33,7 +33,7 @@ git push origin v1.0.0
 5. 点击 "Run workflow" 确认
 
 手动触发时，APK 会作为 artifact 上传，但不会创建正式发行版。
-APK 文件名格式：`UniSchedule-dev-<commit-hash>.apk`
+APK 文件名格式：`UniSchedule-dev-<7位commit哈希>.apk`（例如：`UniSchedule-dev-abc1234.apk`）
 
 ### 工作流步骤 (Workflow Steps)
 

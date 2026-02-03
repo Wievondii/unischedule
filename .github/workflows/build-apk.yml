@@ -36,7 +36,8 @@ jobs:
         uses: android-actions/setup-android@v3
 
       - name: Accept Android SDK licenses
-        run: yes | sdkmanager --licenses || true
+        run: |
+          yes | sdkmanager --licenses > /dev/null 2>&1 || echo "Some licenses may already be accepted"
 
       - name: Sync Capacitor
         run: npx cap sync android
@@ -45,7 +46,7 @@ jobs:
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew assembleDebug --no-daemon
+          ./gradlew assembleDebug --no-daemon --stacktrace
 
       - name: Get version from tag
         id: version
