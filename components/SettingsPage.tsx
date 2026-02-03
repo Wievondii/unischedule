@@ -15,6 +15,16 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ settings, setSettings }) =>
     }
   };
 
+  const updateNumericSetting = (key: keyof SettingsState, value: number) => {
+    if (!Number.isNaN(value) && value > 0) {
+      setSettings(prev => ({ ...prev, [key]: value }));
+    }
+  };
+
+  const updateDateSetting = (key: keyof SettingsState, value: string) => {
+    setSettings(prev => ({ ...prev, [key]: value }));
+  };
+
   return (
     <div className="h-full bg-gray-50 overflow-y-auto no-scrollbar">
       <div className="px-4 py-4 flex items-center bg-white sticky top-0 z-10 border-b">
@@ -30,16 +40,20 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ settings, setSettings }) =>
             
             <div className="p-4 flex items-center justify-between border-b border-gray-50 active:bg-gray-50">
               <div className="flex flex-col">
-                <span className="font-medium text-gray-900">开始上课时间</span>
-                <span className="text-xs text-gray-400">2026/03/02</span>
+                <span className="font-medium text-gray-900">开始上课日期</span>
+                <input
+                  type="date"
+                  value={settings.semesterStartDate}
+                  onChange={(e) => updateDateSetting('semesterStartDate', e.target.value)}
+                  className="mt-1 text-sm text-gray-700 focus:outline-none border border-gray-200 rounded-lg px-2 py-1"
+                />
               </div>
-              <ChevronRight className="w-5 h-5 text-gray-300" />
             </div>
 
             <div className="p-4 flex items-center justify-between border-b border-gray-50 active:bg-gray-50">
               <div className="flex flex-col">
                 <span className="font-medium text-gray-900">当前周数</span>
-                <span className="text-xs text-gray-400">假期中</span>
+                <span className="text-xs text-gray-400">根据起始日自动计算</span>
               </div>
               <ChevronRight className="w-5 h-5 text-gray-300" />
             </div>
@@ -47,9 +61,17 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ settings, setSettings }) =>
             <div className="p-4 flex items-center justify-between active:bg-gray-50">
               <div className="flex flex-col">
                 <span className="font-medium text-gray-900">本学期总周数</span>
-                <span className="text-xs text-gray-400">{settings.totalWeeks} 周</span>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="number"
+                    min={1}
+                    value={settings.totalWeeks}
+                    onChange={(e) => updateNumericSetting('totalWeeks', Number(e.target.value))}
+                    className="w-20 text-sm text-gray-700 focus:outline-none border border-gray-200 rounded-lg px-2 py-1"
+                  />
+                  <span className="text-xs text-gray-400">周</span>
+                </div>
               </div>
-              <ChevronRight className="w-5 h-5 text-gray-300" />
             </div>
           </div>
         </div>
@@ -111,14 +133,28 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ settings, setSettings }) =>
                 <span className="font-medium text-gray-900">课表节数设置</span>
                 <span className="text-xs text-gray-400">自定义每天的课程节数</span>
               </div>
-              <ChevronRight className="w-5 h-5 text-gray-300" />
+              <div className="flex items-center gap-2">
+                <input
+                  type="number"
+                  min={1}
+                  value={settings.sectionsPerDay || 12}
+                  onChange={(e) => updateNumericSetting('sectionsPerDay', Number(e.target.value))}
+                  className="w-20 text-sm text-gray-700 focus:outline-none border border-gray-200 rounded-lg px-2 py-1"
+                />
+                <span className="text-xs text-gray-400">节/天</span>
+              </div>
             </div>
              <div className="p-4 flex items-center justify-between active:bg-gray-50">
               <div className="flex flex-col">
                 <span className="font-medium text-gray-900">设置每周起始日</span>
                 <span className="text-xs text-gray-400">周日也可以作为一周的起始啦</span>
               </div>
-              <ChevronRight className="w-5 h-5 text-gray-300" />
+              <button 
+                onClick={() => toggleSetting('weekStartOnSunday')}
+                className={`w-12 h-7 rounded-full transition-colors relative ${settings.weekStartOnSunday ? 'bg-blue-500' : 'bg-gray-200'}`}
+              >
+                <div className={`w-5 h-5 bg-white rounded-full shadow-md absolute top-1 transition-transform ${settings.weekStartOnSunday ? 'left-6' : 'left-1'}`}></div>
+              </button>
             </div>
           </div>
         </div>

@@ -18,7 +18,9 @@ function App() {
     showNonCurrentWeek: true,
     darkMode: false,
     semesterStartDate: '2025-03-02',
-    totalWeeks: 24
+    totalWeeks: 24,
+    weekStartOnSunday: false,
+    sectionsPerDay: 12,
   });
 
   const [courses, setCourses] = useState<Course[]>(MOCK_COURSES);
@@ -73,6 +75,39 @@ function App() {
     setCourses(importedCourses);
     setActiveTab(Tab.SCHEDULE); // Navigate back to schedule view
   };
+
+  // Persist settings
+  useEffect(() => {
+    const loadSettings = async () => {
+      try {
+        const { value } = await Preferences.get({ key: 'unischedule_settings' });
+        if (value) {
+          setSettings(prev => ({ ...prev, ...JSON.parse(value) }));
+        }
+      } catch (error) {
+        console.error('Failed to load settings:', error);
+        const saved = localStorage.getItem('unischedule_settings');
+        if (saved) {
+          setSettings(prev => ({ ...prev, ...JSON.parse(saved) }));
+        }
+      }
+    };
+    loadSettings();
+  }, []);
+
+  useEffect(() => {
+    const saveSettings = async () => {
+      const settingsJson = JSON.stringify(settings);
+      try {
+        await Preferences.set({ key: 'unischedule_settings', value: settingsJson });
+        localStorage.setItem('unischedule_settings', settingsJson);
+      } catch (error) {
+        console.error('Failed to save settings:', error);
+        localStorage.setItem('unischedule_settings', settingsJson);
+      }
+    };
+    saveSettings();
+  }, [settings]);
 
   const renderContent = () => {
     switch (activeTab) {

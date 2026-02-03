@@ -13,6 +13,8 @@ export const TIME_SLOTS: TimeSlot[] = [
   { section: 10, startTime: '18:55', endTime: '19:40' },
   { section: 11, startTime: '19:50', endTime: '20:35' },
   { section: 12, startTime: '20:45', endTime: '21:30' },
+  { section: 13, startTime: '21:40', endTime: '22:25' },
+  { section: 14, startTime: '22:35', endTime: '23:20' },
 ];
 
 export const MOCK_COURSES: Course[] = [

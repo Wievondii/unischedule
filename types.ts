@@ -16,6 +16,8 @@ export interface SettingsState {
   darkMode: boolean;
   semesterStartDate: string;
   totalWeeks: number;
+  weekStartOnSunday?: boolean;
+  sectionsPerDay?: number;
 }
 
 export interface TimeSlot {
