@@ -23,7 +23,10 @@ const ImportPage: React.FC<ImportPageProps> = ({ onImport }) => {
       setMessage(null);
       
       const content = await file.text();
-      const courses = parser(content);
+      const courses = parser(content).map((c, idx) => ({
+        ...c,
+        id: c.id || `import-${Date.now()}-${idx}`,
+      }));
       
       if (courses.length === 0) {
         throw new Error('没有找到有效的课程数据');

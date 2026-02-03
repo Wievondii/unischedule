@@ -13,17 +13,20 @@ interface ScheduleGridProps {
 const ScheduleGrid: React.FC<ScheduleGridProps> = ({ courses, settings, currentWeek, setCurrentWeek }) => {
   // Determine displayed days based on settings
   const daysToShow = settings.showWeekends ? 7 : 5;
-  const displayedDays = DAYS.slice(0, daysToShow);
+  const baseDays = settings.weekStartOnSunday ? [...DAYS.slice(-1), ...DAYS.slice(0, 6)] : DAYS;
+  const displayedDays = baseDays.slice(0, daysToShow);
 
   // Helper to find course at specific slot
   const getCourseAtSlot = (dayIndex: number, section: number) => {
-    return courses.find(c => c.day === dayIndex + 1 && c.startSection === section);
+    const dayValue = settings.weekStartOnSunday ? (dayIndex === 0 ? 7 : dayIndex) : dayIndex + 1;
+    return courses.find(c => c.day === dayValue && c.startSection === section);
   };
 
   // Helper to check if a slot is occupied by a multi-hour course started earlier
   const isSlotOccupied = (dayIndex: number, section: number) => {
+    const dayValue = settings.weekStartOnSunday ? (dayIndex === 0 ? 7 : dayIndex) : dayIndex + 1;
     return courses.some(c => 
-      c.day === dayIndex + 1 && 
+      c.day === dayValue && 
       c.startSection < section && 
       c.startSection + c.duration > section
     );
@@ -39,11 +42,10 @@ const ScheduleGrid: React.FC<ScheduleGridProps> = ({ courses, settings, currentW
 
   // Mock Date Generator for the header
   const getDayDate = (dayIndex: number) => {
-    // This is a mock date calculation relative to a fixed start
-    const baseMonth = 3; // March
-    const baseDay = 2;   // 2nd
+    const start = new Date(settings.semesterStartDate || '2025-03-02');
     const offset = (currentWeek - 1) * 7 + dayIndex;
-    const date = new Date(2025, baseMonth - 1, baseDay + offset);
+    const date = new Date(start);
+    date.setDate(start.getDate() + offset);
     return `${date.getMonth() + 1}/${date.getDate()}`;
   };
 
@@ -80,7 +82,7 @@ const ScheduleGrid: React.FC<ScheduleGridProps> = ({ courses, settings, currentW
       {/* Scrollable Grid */}
       <div className="flex-1 overflow-y-auto no-scrollbar">
         <div className="grid grid-cols-[3rem_repeat(5,1fr)] relative">
-          {TIME_SLOTS.map((slot, rowIndex) => (
+          {(settings.sectionsPerDay ? TIME_SLOTS.slice(0, settings.sectionsPerDay) : TIME_SLOTS).map((slot, rowIndex) => (
             <React.Fragment key={slot.section}>
               {/* Time Column */}
               <div className="flex flex-col items-center justify-center border-b border-r py-1 h-20 text-xs text-gray-500 bg-gray-50">
