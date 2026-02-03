@@ -70,6 +70,8 @@ npm run build
 
 将应用打包为 Android APK（含桌面小部件）：
 
+### 本地构建
+
 1. 同步构建：
    ```bash
    npm run android:sync
@@ -81,6 +83,17 @@ npm run build
    ```
 
 详细步骤请查看 [BUILD_APK.md](BUILD_APK.md)
+
+### 自动构建与发布
+
+本项目配置了 GitHub Actions 自动构建工作流。创建版本标签即可自动构建并发布 APK：
+
+```bash
+git tag v1.0.0
+git push origin v1.0.0
+```
+
+构建完成后，APK 将自动发布到 GitHub Releases。详细信息请查看 [RELEASE_WORKFLOW.md](RELEASE_WORKFLOW.md)
 
 ## 桌面小部件
 
