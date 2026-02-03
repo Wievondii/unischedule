@@ -10,6 +10,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: write  # Required to create releases and upload assets
+      actions: read    # Required for actions
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
