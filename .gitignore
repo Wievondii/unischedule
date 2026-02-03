@@ -27,3 +27,7 @@ dist-ssr
 android/
 ios/
 .capacitor/
+
+# Release builds
+release/
+*.apk
